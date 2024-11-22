@@ -23,13 +23,16 @@ taskipy = "^1.14.0"
 pythonpath = "."
 addopts = '-p no:warnings'
 
+
 [tool.ruff]
 line-length = 79
 extend-exclude = ['migrations']
 
+
 [tool.ruff.lint]
 preview = true
 select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+ignore = ["E117"]
 
 [tool.ruff.format]
 preview = true
