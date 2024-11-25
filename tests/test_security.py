@@ -20,3 +20,4 @@ def test_jwt():
     assert result['sub'] == data['sub']
     assert result['exp']
 
+

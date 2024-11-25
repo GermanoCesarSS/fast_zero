@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+from fast_zero.security import create_access_token
+
 
 def test_get_users__exercicio(client, user):
     response = client.get('/users/1')
@@ -13,7 +15,7 @@ def test_get_users__exercicio(client, user):
 
 
 def test_get_user_not_found__exercicio(client):
-    response = client.get('users/666')
+    response = client.get('/users/666')
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'User nao encontrado'}
@@ -51,35 +53,38 @@ def test_create_user_conflict_email__exercicio(client, user):
     assert response.json() == {'detail': 'Email ja existe'}
 
 
-def test_put_user_not_found__exercicio(client):
+def test_put_user_not_found__exercicio(client, user, token):
     response = client.put(
         '/users/666',
+        headers={'Authorization': f'Bearer {token}'},
         json={
-            'id': 666,
+            'id': user.id,
             'username': 'testusername10',
             'email': 'test@test.com',
             'password': '123',
         },
     )
-    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
-def test_put_user_conflict__exercicio(client, user2):
-    response = client.put(
-        'users/1',
-        json={
-            'id': '1',
-            'username': 'Teste2',
-            'email': 'teste2@test.com',
-            'password': 'testtest',
-        },
+def test_jwt_credentials_exception_email__exercicio(client):
+    token = create_access_token({})
+
+    response = client.delete(
+        '/users/1', headers={'Authorization': f'Bearer {token}'}
     )
 
-    assert response.status_code == HTTPStatus.CONFLICT
-    assert response.json() == {'detail': 'Username ou Email ja existe'}
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}
 
 
-def test_delete_user_not_found__exercicio(client):
-    response = client.delete('/users/666')
+def test_jwt_credentials_exception_user__exercicio(client):
+    data = {'sub': '666@test.com'}
+    token = create_access_token(data)
 
-    assert response.status_code == HTTPStatus.NOT_FOUND
+    response = client.delete(
+        '/users/1', headers={'Authorization': f'Bearer {token}'}
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}

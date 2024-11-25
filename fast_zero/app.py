@@ -103,7 +103,7 @@ def update_user(
     if current_user.id != user_id:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail='Sem permisao para excluir esse usuario',
+            detail='Sem permisao para esse usuario',
         )
 
     current_user.username = user.username

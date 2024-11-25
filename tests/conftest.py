@@ -80,19 +80,6 @@ def user(session):
 
 
 @pytest.fixture
-def user2(session):
-    user = User(username='Teste', email='teste@test.com', password='testtest')
-    user_2 = User(
-        username='Teste2', email='teste2@test.com', password='testtest2'
-    )
-    session.add_all([user, user_2])
-    session.commit()
-    session.refresh(user_2)
-
-    return user2
-
-
-@pytest.fixture
 def token(client, user):
     response = client.post(
         '/token/',
