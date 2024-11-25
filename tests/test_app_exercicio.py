@@ -64,7 +64,7 @@ def test_put_user_not_found__exercicio(client, user, token):
             'password': '123',
         },
     )
-    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.status_code == HTTPStatus.FORBIDDEN
 
 
 def test_jwt_credentials_exception_email__exercicio(client):
