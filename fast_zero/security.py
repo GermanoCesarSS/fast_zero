@@ -43,6 +43,7 @@ def create_access_token(data: dict):
     return encode_jwt
 
 
+# Loga usuario
 def get_current_user(
     session: Session = Depends(get_session),
     token: str = Depends(oauth2_scheme),
