@@ -23,27 +23,20 @@ def test_post_user(client):
     }
 
 
-def test_get_users(client, token):
+def test_get_users(client):
     response = client.get(
-        '/users/', headers={'Authorization': f'Bearer {token}'}
+        '/users/'
     )
-
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'users': [
-            {
-                'email': 'teste@test.com',
-                'id': 1,
-                'username': 'Teste',
-            },
-        ],
+        'users': [],
     }
 
 
-def test_get_users_with_users(client, user, token):
+def test_get_users_with_users(client, user):
     user_schema = UserPublic.model_validate(user).model_dump()
     response = client.get(
-        '/users/', headers={'Authorization': f'Bearer {token}'}
+        '/users/'
     )
     assert response.json() == {'users': [user_schema]}
 
@@ -73,3 +66,13 @@ def test_delete_user(client, token):
     )
 
     assert response.json() == {'message': 'User deletado'}
+
+
+def test_delete_user_fornidden(client, user, token):
+    response = client.delete(
+        f'/users/{user.id + 1}', headers={'Authorization': f'Bearer {token}'}
+    )
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {
+        'detail': 'Sem permisao para excluir esse usuario'
+    }
