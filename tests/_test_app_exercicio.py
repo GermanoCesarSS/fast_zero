@@ -67,6 +67,21 @@ def test_put_user_not_found__exercicio(client, user, token):
     assert response.status_code == HTTPStatus.FORBIDDEN
 
 
+def test_put_user_conflict__exercicio(client, user, token, other_user):
+    response = client.put(
+        f'/users/{user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': other_user.username,
+            'email': other_user.email,
+            'password': user.password,
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Username ou Email ja existe'}
+
+
 def test_jwt_credentials_exception_email__exercicio(client):
     token = create_access_token({})
 
