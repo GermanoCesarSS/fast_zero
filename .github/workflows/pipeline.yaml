@@ -21,7 +21,7 @@ jobs:
           python-version: '3.12'
       - name: Instalar Poetry
         run: pipx install poetry
-      
+          
       - name: Instalar dependências
         run: poetry install
       
