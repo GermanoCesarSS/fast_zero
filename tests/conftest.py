@@ -59,12 +59,12 @@ def engine():
 # scope='function' ##
 @pytest.fixture
 def session(engine):
-        table_registry.metadata.create_all(engine)
+    table_registry.metadata.create_all(engine)
 
-        with Session(engine) as _session:
-            yield _session
+    with Session(engine) as _session:
+        yield _session
 
-        table_registry.metadata.drop_all(engine)
+    table_registry.metadata.drop_all(engine)
 
 
 @contextmanager

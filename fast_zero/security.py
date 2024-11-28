@@ -14,7 +14,6 @@ from fast_zero.database import get_session
 from fast_zero.models import User
 from fast_zero.settings import Settings
 
-
 settings = Settings()
 pwd_context = PasswordHash.recommended()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
